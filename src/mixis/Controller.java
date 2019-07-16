@@ -4,12 +4,16 @@ import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import java.lang.String;
 
 
 public class Controller {
 
-    StringBuilder inputOne = new StringBuilder(0);
-    StringBuilder inputTwo = new StringBuilder(0);
+    StringBuilder firstOperand = new StringBuilder(0);
+    StringBuilder secondOperand = new StringBuilder(0);
+    StringBuilder tempOperand = new StringBuilder(0);
+    boolean isFirstOperand = true;
+
     boolean multiply = false;
     boolean subtract = false;
     boolean equals = false;
@@ -38,64 +42,51 @@ public class Controller {
     public Button decimalButton;
 
 
-    public void numberButtonPress(Event e)
-    {
-        if(e.getSource() == oneButton)
-        {
-            inputOne.append('1');
-            displayLabel.setText((inputOne.toString()));
-        }
-        else if(e.getSource() == twoButton)
-        {
-            inputOne.append('2');
-            displayLabel.setText((inputOne.toString()));
-        }
-        else if(e.getSource() == threeButton)
-        {
-            inputOne.append('3');
-            displayLabel.setText((inputOne.toString()));
-        }
-        else if(e.getSource() == fourButton)
-        {
-            inputOne.append('4');
-            displayLabel.setText((inputOne.toString()));
-        }
-        else if(e.getSource() == fiveButton)
-        {
-            inputOne.append('5');
-            displayLabel.setText((inputOne.toString()));
-        }
-        else if(e.getSource() == sixButton)
-        {
-            inputOne.append('6');
-            displayLabel.setText((inputOne.toString()));
-        }
-        else if(e.getSource() == sevenButton)
-        {
-            inputOne.append('7');
-            displayLabel.setText((inputOne.toString()));
-        }
-        else if(e.getSource() == eightButton)
-        {
-            inputOne.append('8');
-            displayLabel.setText((inputOne.toString()));
-        }
-        else if(e.getSource() == nineButton)
-        {
-            inputOne.append('9');
-            displayLabel.setText((inputOne.toString()));
-        }
-        else if(e.getSource() == zeroButton)
-        {
-            inputOne.append('0');
-            displayLabel.setText((inputOne.toString()));
-        }
-        else if(e.getSource() == decimalButton && decimal == false)
-        {
-            inputOne.append('.');
-            displayLabel.setText((inputOne.toString()));
+    public void numberButtonPress(Event e) {
+        if (e.getSource() == oneButton) {
+            tempOperand.append('1');
+            displayLabel.setText((tempOperand.toString()));
+        } else if (e.getSource() == twoButton) {
+            tempOperand.append('2');
+            displayLabel.setText((tempOperand.toString()));
+        } else if (e.getSource() == threeButton) {
+            tempOperand.append('3');
+            displayLabel.setText((tempOperand.toString()));
+        } else if (e.getSource() == fourButton) {
+            tempOperand.append('4');
+            displayLabel.setText((tempOperand.toString()));
+        } else if (e.getSource() == fiveButton) {
+            tempOperand.append('5');
+            displayLabel.setText((tempOperand.toString()));
+        } else if (e.getSource() == sixButton) {
+            tempOperand.append('6');
+            displayLabel.setText((tempOperand.toString()));
+        } else if (e.getSource() == sevenButton) {
+            tempOperand.append('7');
+            displayLabel.setText((tempOperand.toString()));
+        } else if (e.getSource() == eightButton) {
+            tempOperand.append('8');
+            displayLabel.setText((tempOperand.toString()));
+        } else if (e.getSource() == nineButton) {
+            tempOperand.append('9');
+            displayLabel.setText((tempOperand.toString()));
+        } else if (e.getSource() == zeroButton) {
+            tempOperand.append('0');
+            displayLabel.setText((tempOperand.toString()));
+        } else if (e.getSource() == decimalButton && !decimal) {
+            tempOperand.append('.');
+            displayLabel.setText((tempOperand.toString()));
             decimal = true;
         }
+
+        if (isFirstOperand) {
+            firstOperand = tempOperand;
+        }
+        else
+        {
+            secondOperand = tempOperand;
+        }
+        tempOperand.setLength(0);
     }
 
 
@@ -104,16 +95,18 @@ public class Controller {
     {
         if(e.getSource() == deleteButton)
         {
-            inputOne.setLength(0);
-            inputTwo.setLength(0);
-            resetSelectedOperation();
+            isFirstOperand = true;
+            firstOperand.setLength(0);
+            secondOperand.setLength(0);
+            resetSelectedOperator();
             displayLabel.setText("0");
         }
     }
 
     @FXML
-    public void selectedOperation(Event e)
+    public void selectedOperator(Event e)
     {
+        resetSelectedOperator();
         if(e.getSource() == divisionButton)
         {
             division = true;
@@ -130,9 +123,11 @@ public class Controller {
         {
             addition = true;
         }
+        isFirstOperand = false;
     }
 
-    public void resetSelectedOperation()
+    @FXML
+    public void resetSelectedOperator()
     {
         multiply = false;
         subtract = false;
@@ -142,6 +137,34 @@ public class Controller {
         decimal = false;
     }
 
+    @FXML
+    public void equals()
+    {
+        Double first = Double.parseDouble(firstOperand.toString());
+        Double second = Double.parseDouble(secondOperand.toString());
+        StringBuilder temp = new StringBuilder();
+        if(multiply)
+        {
+            temp.append(first * second);
+        }
+        else if(subtract)
+        {
+            temp.append(first - second);
+        }
+        else if(addition)
+        {
+            temp.append(first + second);
+        }
+        else if(division)
+        {
+            temp.append(first / second);
+        }
+        else
+        {
+            System.out.println("equals error");
+        }
+        displayLabel.setText(temp.toString());
+    }
 
 
 }
